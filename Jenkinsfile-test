@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build Application') {
+             steps{
+                build job: 'test-build-web-application'
+            }
+        }
+        stage('Deploy to Staging Environment'){
+            steps{
+                build job: 'test-Deploy-Application-to-Staging'
+            }            
+        }
+        stage('Deploy to Production Environment'){
+            steps{
+                timeout(time:5, unit:'DAYS'){
+                    input message:'Approve PRODUCTION Deployment?'
+                }
+                build job: 'test-Deploy-Application-to-Production'
+            }
+        }
+    }
+}
